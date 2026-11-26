@@ -1,0 +1,76 @@
+name: skills-tests
+
+# Offline tests for the bundled Beta skills' scripts (tests/skills), plus the
+# check that the Cursor and Kiro copies match the Claude source, and the
+# platform-check suite from .github/tests (the O11 exclusions in the skill
+# docs and the README troubleshooting row). Needs no tenant and no secrets.
+
+on:
+  pull_request:
+    paths:
+      - "claude/skills/outsystems-*/**"
+      - "cursor/skills/outsystems-*/**"
+      - "kiro/outsystems/skills/outsystems-*/**"
+      - "tests/skills/**"
+      - ".github/workflows/skills-tests.yml"
+      - "SKILL.md"
+      - "claude/skills/outsystems/SKILL.md"
+      - "cursor/skills/outsystems/SKILL.md"
+      - "kiro/outsystems/skills/outsystems/SKILL.md"
+      - "copilot/skill.md"
+      - "README.md"
+      - ".github/tests/lib.sh"
+      - ".github/tests/skill-platform-check.test.sh"
+  push:
+    branches: [main]
+    paths:
+      - "claude/skills/outsystems-*/**"
+      - "cursor/skills/outsystems-*/**"
+      - "kiro/outsystems/skills/outsystems-*/**"
+      - "tests/skills/**"
+      - ".github/workflows/skills-tests.yml"
+      - "SKILL.md"
+      - "claude/skills/outsystems/SKILL.md"
+      - "cursor/skills/outsystems/SKILL.md"
+      - "kiro/outsystems/skills/outsystems/SKILL.md"
+      - "copilot/skill.md"
+      - "README.md"
+      - ".github/tests/lib.sh"
+      - ".github/tests/skill-platform-check.test.sh"
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The skills promise Python 3.8+, the oldest version setup-python
+        # still provides on ubuntu-latest, and the newest.
+        python-version: ["3.8", "3.x"]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install pytest (the scripts themselves use only the standard library)
+        run: python -m pip install --upgrade pytest
+
+      - name: Run the skill suites
+        run: python -m pytest -q -p no:cacheprovider tests/skills
+
+  platform-check:
+    # Bash and git only, so it runs once, outside the Python matrix.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Check the platform rule, the skill descriptions and the README troubleshooting row
+        run: bash .github/tests/skill-platform-check.test.sh
