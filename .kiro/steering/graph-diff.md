@@ -1,0 +1,33 @@
+---
+inclusion: always
+---
+# Graph diff (opt-in)
+
+Applies to any spec that publishes an ODC app through the OutSystems MCP.
+
+## Ask once, when creating requirements.md
+
+Before writing requirements.md for a new spec, ask the user:
+
+"Do you want a graph diff after each publish? I save the app graph before each publish and compare it afterwards, to report anything outside this spec's scope. The graph stays in files, not in the chat, but it adds a few tool calls per publish."
+
+Options: Yes, every publish / Only for change specs / No.
+
+For a change spec, ask again and suggest the parent spec's answer.
+
+Record the answer in requirements.md under a "Verification" heading, as one line:
+
+Graph diff: yes | change specs only | no
+
+Do not ask again for the same spec unless the user changes it.
+
+## If yes
+
+- design.md gets a short "Graph diff" section that names the odc-graph-diff skill and the scope of each publish.
+- tasks.md: every publish task starts with "Save the baseline graph" and ends with "Graph diff against the previous revision", with the scope of that publish. Stop for review if anything is out of scope.
+- Follow the odc-graph-diff skill. Never read the graph into the chat.
+
+## If no
+
+- No graph diff tasks.
+- design.md states: "Mentor changes are verified by the acceptance criteria and browser checks only. Changes outside this spec's scope may not be detected."

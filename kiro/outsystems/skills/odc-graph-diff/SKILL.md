@@ -1,0 +1,54 @@
+---
+name: odc-graph-diff
+description: 'Compare an ODC app model graph before and after a publish, to see exactly what an agent or Mentor changed and flag anything outside the spec. Use when creating or updating a Kiro spec for an ODC app that will publish through the OutSystems MCP: if requirements.md has no "Graph diff:" line, ask the user whether they want one. Run it only when the spec says "Graph diff: yes" (or "change specs only" for a change spec), or when the user asks. Saves context_graph output to files and compares them with a local script. Never reads the graph into the chat. Not for OutSystems 11 (O11).'
+license: MIT
+metadata:
+  version: "0.1.0"
+  author: Michael de Guzman
+  origin: Not part of the OutSystems Power. Added to this snapshot from the Employee Catalog builds (Nov 2026).
+---
+
+# Graph diff for ODC
+
+On ODC, the OutSystems MCP read tools return only the published revision. Before a publish, Mentor's change can't be checked from the model, only from Mentor's own summary. This skill checks it after the publish, by comparing the new revision's graph with the one before.
+
+It needs a shell with Python 3.8+. The script uses the standard library only and never calls the tenant.
+
+## Ask first
+
+The graph diff is opt-in. SDD Base's steering rule `.kiro/steering/graph-diff.md` asks for you. If that rule is not loaded and requirements.md has no `Graph diff:` line, ask the user once:
+
+"Do you want a graph diff after each publish? I save the app graph before each publish and compare it afterwards, to report anything outside this spec's scope. The graph stays in files, not in the chat, but it adds a few tool calls per publish."
+
+Options: Yes, every publish / Only for change specs / No. Record the answer in requirements.md under "Verification" as `Graph diff: yes | change specs only | no`.
+
+## When to run
+
+Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: change specs only` and this is a change spec, or the user asks. If the spec says `no`, do not run it.
+
+## Steps
+
+1. **Baseline, before the publish.** Call `app_revisions` and note the latest revision N. Call `context_graph` for the whole app, no root. Save the full result to `Reports/graphdiff/N.xre`. `context_graph` serves only the latest revision, so this is the last chance to save N.
+   - If `Reports/graphdiff/N.xre` already exists and its header says revision N, reuse it.
+   - Check the header: `has_more` must be false. If not, read every page before saving.
+2. **Publish**, following the main `outsystems` skill's confirmation rules.
+3. **After the publish.** Call `app_revisions` again and note the new revision M. If M is more than N + 1, someone else published in between (for example from ODC Studio), or Mentor auto-merged another revision. Say so. Only M can be read now, so compare N to M and report the extra revision.
+4. Call `context_graph` again, whole app, and save it to `Reports/graphdiff/M.xre`.
+5. **Compare.** Run, from the skill folder:
+
+   ```
+   python3 scripts/graphdiff.py Reports/graphdiff/N.xre Reports/graphdiff/M.xre \
+     --scope "<Type:Name of each element this task may change>" \
+     --out Reports/graphdiff/N-to-M.diff
+   ```
+
+   Take the scope from the task in tasks.md, for example `IMobileScreen:Employee_List,IEntity:Department`. Exit code 2 means something changed outside the scope.
+6. **Write `Reports/graphdiff/N-to-M-notes.md`** from `templates/notes.md`. Read the content changes in the `.diff` and say, for each, whether the spec asked for it. Check values that matter to the spec, such as record names, labels, filters and roles. The script shows which elements changed, not whether their values are right.
+7. **Stop for the user** if anything is out of scope or unexplained. Do not fix it. Report it.
+
+## Rules
+
+- Never paste or read the whole graph into the chat. It is several MB. Save it to a file and use the script.
+- Layout-only changes (X, Y) and stamp-only changes (last modified by, date, tool) are listed separately. They are not findings on their own, but an unplanned stamp change can show an ODC Studio publish.
+- Treat every revision you did not publish as a finding to explain, even if nothing functional changed.
+- The graph checks the model. It does not show runtime problems, such as a timer that did not run. Keep the acceptance criteria and browser checks.
