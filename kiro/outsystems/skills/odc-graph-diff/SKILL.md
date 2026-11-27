@@ -30,15 +30,15 @@ Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: chan
 
 1. **Summary check, before the publish.** Before you ask the user to confirm the publish, compare Mentor's summary and its pending changes with the task prompt and with the spec's scope for this task.
    - Record the result in the notes file under "Summary check (before publish)": "Matches", or each difference. The notes file is written after the publish (step 7), so keep the result until then.
-   - If something is clearly wrong or missing, ask Mentor to correct it before publishing.
-   - Mentor's summary can be incomplete, so this check does not replace the graph diff after the publish. Keep the scope from the spec, never from Mentor's list.
+   - If something is clearly wrong or missing, report the difference to the user and ask before sending a correction to Mentor. A correction is a Mentor turn and follows the main `outsystems` skill's confirmation rules.
+   - The graph diff can show elements the summary does not list, so this check does not replace the graph diff after the publish. Keep the scope from the spec, never from Mentor's list.
    - Source: OutSystems' Build your first app guide (Step 5) suggests comparing the agent's summary with the prompt file before each publish: https://success.outsystems.com/documentation/outsystems_developer_cloud/agentic_development/outsystems_mcp/build_your_first_app/
 2. **Baseline, before the publish.** Call `app_revisions` and note the latest revision N. Call `context_graph` for the whole app, no root. Save the full result to `Reports/graphdiff/N.xre`. `context_graph` serves only the latest revision, so this is the last chance to save N.
    - If `Reports/graphdiff/N.xre` already exists and its header says revision N, reuse it.
    - Check the header: `has_more` must be false. If not, read every page before saving.
 3. **Publish**, following the main `outsystems` skill's confirmation rules.
 4. **After the publish.** Call `app_revisions` again and note the new revision M. If M is more than N + 1, someone else published in between (for example from ODC Studio), or Mentor auto-merged another revision. Say so. Only M can be read now, so compare N to M and report the extra revision.
-4. Call `context_graph` again, whole app, and save it to `Reports/graphdiff/M.xre`.
+5. Call `context_graph` again, whole app, and save it to `Reports/graphdiff/M.xre`.
 6. **Compare.** Run, from the skill folder:
 
    ```
@@ -47,7 +47,7 @@ Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: chan
      --out Reports/graphdiff/N-to-M.diff
    ```
 
-   Take the scope from the spec and the task in tasks.md, for example `IMobileScreen:Employee_List,IEntity:Department`. Never take it from Mentor's summary or pending-changes list: those have been incomplete, and the point of the diff is to check them. Exit code 2 means something changed outside the scope.
+   Take the scope from the spec and the task in tasks.md, for example `IMobileScreen:Employee_List,IEntity:Department`. Never take it from Mentor's summary or pending-changes list: the diff has shown elements that neither listed, and the point of the diff is to check them. Exit code 2 means something changed outside the scope.
 
    Two things to know when you set the scope:
    - The app's default screen is stored on the app element (`IESpace:<App>`), not on the UI flow.

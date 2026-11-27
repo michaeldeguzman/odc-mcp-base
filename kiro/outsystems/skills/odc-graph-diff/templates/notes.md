@@ -16,7 +16,7 @@ Recorded <date> after <publish name>. Read-only on the tenant: app_revisions, co
 
 ## Summary check (before publish)
 
-<Mentor's summary and pending changes, compared with the task prompt and the spec's scope for this task, before the publish was confirmed. "Matches", or each difference, with Mentor's claims attributed to Mentor. If something was clearly wrong or missing, what Mentor was asked to correct and what came back.>
+<Mentor's summary and pending changes, compared with the task prompt and the spec's scope for this task, before the publish was confirmed. "Matches", or each difference, with Mentor's claims attributed to Mentor. If something was clearly wrong or missing, what was reported to the user, whether a correction was sent to Mentor, and what came back.>
 
 ## Result
 

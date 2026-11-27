@@ -26,7 +26,7 @@ The graph is several MB, so it never goes into the chat. Kiro saves it to a file
 
 ## Order of a publish task
 
-Each publish task runs in this order: summary check against the prompt and spec, save the baseline graph, publish, then the graph diff against the previous revision, followed by the log check steps if `Log check: yes`. The summary check compares Mentor's summary and pending changes with the task prompt and the spec's scope before the publish is confirmed (an idea from OutSystems' Build your first app guide), and the notes file's "Summary vs graph diff" section then lists what the diff shows that Mentor's summary did not mention, and what the summary claimed that the diff does not show. Mentor's summary can be incomplete, so the summary check does not replace the graph diff, and the scope still comes from the spec.
+Each publish task runs in this order: summary check against the prompt and spec, save the baseline graph, publish, then the graph diff against the previous revision, followed by the log check steps if `Log check: yes`. The summary check compares Mentor's summary and pending changes with the task prompt and the spec's scope before the publish is confirmed (an idea from OutSystems' Build your first app guide), and the notes file's "Summary vs graph diff" section then lists what the diff shows that Mentor's summary did not mention, and what the summary claimed that the diff does not show. The graph diff can show elements the summary does not list, so the summary check does not replace the graph diff, and the scope still comes from the spec.
 
 ## What is in SDD Base
 
@@ -47,7 +47,7 @@ Each publish task runs in this order: summary check against the prompt and spec,
 - It runs after the publish, so an unverified change reaches Development first.
 - It shows which elements changed, not whether their values are right. Kiro still checks values against the spec.
 - It checks the model, not the running app. The log check narrows that gap but doesn't close it. Keep the acceptance criteria and browser checks.
-- Don't take the scope from Mentor's summary or pending-changes list. In testing, both were incomplete.
+- Don't take the scope from Mentor's summary or pending-changes list. In testing, the graph diff showed elements that neither listed.
 - It runs only when Kiro publishes. A publish from ODC Studio shows up at the next Kiro check.
 
 The graph diff is not part of OutSystems' Power. It was added to this snapshot after the Employee Catalog builds, November 2026.
