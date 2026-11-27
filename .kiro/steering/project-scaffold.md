@@ -10,7 +10,8 @@ When I start the first spec in a project root that has no `Prompts/` and no `Rep
   .kiro/steering/project-<name>.md   this project's rules: app name, app key, scope
   .kiro/specs/                       Kiro's specs
   Prompts/                           numbered prompts sent to Mentor: 001-create-app.md, 002-...
-  Reports/                           checks, interventions.md, and graphdiff/ if the graph diff is on
+  Reports/                           checks, interventions.md, build/ for the spec-driven-build skill's
+                                     working files, and graphdiff/ if the graph diff is on
   README.md                          what the app is and which tenant stage it uses
 ```
 

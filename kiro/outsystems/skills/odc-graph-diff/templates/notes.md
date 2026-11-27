@@ -26,6 +26,10 @@ Recorded <date> after <publish name>. Read-only on the tenant: app_revisions, co
 
 <Each change the task did not ask for, or "None.">
 
+## Log check
+
+<Only if the spec says Log check: yes. Window from <publish time> to <time>, <n> entries, grouped by the element that wrote them. Every error and warning in full. Which entries come from elements this publish changed. Or "No entries", which is not proof the app works.>
+
 ## Decision
 
 <Pending the user, or what the user decided.>

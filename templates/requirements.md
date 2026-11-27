@@ -13,6 +13,7 @@
    - Check by hand: <steps and expected values, using made-up sample data only>.
 ## Verification
 Graph diff: <yes | change specs only | no>
+Log check: <yes | no>
 ## Notes
 - Sample data is made up. No real people, phone numbers or addresses.
 - Mobile apps and custom code (C#, External Logic) are out of scope unless the project steering says otherwise.

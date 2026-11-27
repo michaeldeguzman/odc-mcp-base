@@ -30,7 +30,7 @@ All OutSystems skills except `outsystems` are Beta features. See [OutSystems' RE
 | `.kiro/steering/workspace-layout.md` | Always | Keeps project files in the project root and SDD Base read-only |
 | `.kiro/steering/project.md` | Always | Default rules for ODC work: Reactive Web only, no custom code, made-up data, confirm every tenant write. Change them to suit your project |
 | `.kiro/steering/project-scaffold.md` | Always | On a new project, proposes a folder structure (`Prompts/`, `Reports/`, project steering, README) and creates it only after you confirm |
-| `.kiro/steering/graph-diff.md` | Always | Asks whether you want a graph diff after each publish. See [GRAPH-DIFF.md](GRAPH-DIFF.md) |
+| `.kiro/steering/graph-diff.md` | Always | Asks whether you want a graph diff after each publish, and an optional log check. See [GRAPH-DIFF.md](GRAPH-DIFF.md) |
 | `.kiro/steering/outsystems-ui.md` | Manual (`#outsystems-ui`) | Points Kiro at the OutSystems UI references in `vendor/outsystems-ui/docs-ai/` |
 | `.kiro/steering/sftdd.md` | Manual (`#sftdd`) | Spec-First TDD workflow, for Playwright tests in `e2e/` |
 | `.kiro/agents/status-watcher.json` | Agent | Read-only agent on a cheaper model. It waits on long Mentor runs, publishes and deployments, so the main chat doesn't re-read its whole context on every poll |

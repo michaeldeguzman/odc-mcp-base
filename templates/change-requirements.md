@@ -14,5 +14,6 @@ Terms not listed here keep their meaning from the main requirements.
    - Check by hand: <steps and expected values>.
 ## Verification
 Graph diff: <yes | no> (the main spec's answer is the default)
+Log check: <yes | no>
 ## Last task
 Update `.kiro/specs/<main-spec>/requirements.md` with this change. If the app is built with outsystems-spec-driven-build, regenerate its `spec.md`. Keep this change spec as the record of what changed and why.

@@ -16,7 +16,7 @@ It needs a shell with Python 3.8+. The script uses the standard library only and
 
 ## Ask first
 
-The graph diff is opt-in. SDD Base's steering rule `.kiro/steering/graph-diff.md` asks for you. If that rule is not loaded and requirements.md has no `Graph diff:` line, ask the user once:
+The graph diff is opt-in. SDD Base's steering rule `.kiro/steering/graph-diff.md` asks for you. If that rule is not loaded and requirements.md has no `Graph diff:` line, ask the user the same questions as the rule:
 
 "Do you want a graph diff after each publish? I save the app graph before each publish and compare it afterwards, to report anything outside this spec's scope. The graph stays in files, not in the chat, but it adds a few tool calls per publish."
 
@@ -42,13 +42,23 @@ Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: chan
      --out Reports/graphdiff/N-to-M.diff
    ```
 
-   Take the scope from the task in tasks.md, for example `IMobileScreen:Employee_List,IEntity:Department`. Exit code 2 means something changed outside the scope.
+   Take the scope from the spec and the task in tasks.md, for example `IMobileScreen:Employee_List,IEntity:Department`. Never take it from Mentor's summary or pending-changes list: those have been incomplete, and the point of the diff is to check them. Exit code 2 means something changed outside the scope.
+
+   Two things to know when you set the scope:
+   - The app's default screen is stored on the app element (`IESpace:<App>`), not on the UI flow.
+   - A rename reaches every element that refers to the renamed one. Renaming a role, for example, also changes the permission names on every screen that uses it. Expect those changes and explain them, but leave them out of the scope so they are listed.
 6. **Write `Reports/graphdiff/N-to-M-notes.md`** from `templates/notes.md`. Read the content changes in the `.diff` and say, for each, whether the spec asked for it. Check values that matter to the spec, such as record names, labels, filters and roles. The script shows which elements changed, not whether their values are right.
 7. **Stop for the user** if anything is out of scope or unexplained. Do not fix it. Report it.
+8. **Log check, only if the spec says `Log check: yes`.** The graph checks the model. The log check looks at what the app did after the publish.
+   - Note the publish time. Before the next publish, or before the browser checks, call the MCP's app log tool (`app_logs` at the time of writing; read the live tool list) for this app and stage, from the publish time to now. Aim for a window of about 30 minutes. If less time has passed, say how long the window was.
+   - Count the entries and group them by the element that wrote them, such as an action, a screen or a timer. List every error and warning in full.
+   - Say which entries come from elements this publish changed and which come from elements it did not touch. An error from an untouched element after the publish is a finding too.
+   - Add the result to the notes file under "Log check". Stop for the user on any error.
+   - No entries is not proof that the app works. A timer that never runs writes nothing. Say "no entries" plainly and keep the browser checks.
 
 ## Rules
 
 - Never paste or read the whole graph into the chat. It is several MB. Save it to a file and use the script.
 - Layout-only changes (X, Y) and stamp-only changes (last modified by, date, tool) are listed separately. They are not findings on their own, but an unplanned stamp change can show an ODC Studio publish.
 - Treat every revision you did not publish as a finding to explain, even if nothing functional changed.
-- The graph checks the model. It does not show runtime problems, such as a timer that did not run. Keep the acceptance criteria and browser checks.
+- The graph checks the model. It does not show runtime problems, such as a timer that did not run. The log check narrows that gap but does not close it. Keep the acceptance criteria and browser checks.
