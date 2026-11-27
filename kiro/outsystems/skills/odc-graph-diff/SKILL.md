@@ -22,6 +22,12 @@ The graph diff is opt-in. SDD Base's steering rule `.kiro/steering/graph-diff.md
 
 Options: Yes, every publish / Only for change specs / No. Record the answer in requirements.md under "Verification" as `Graph diff: yes | change specs only | no`.
 
+If the answer is yes, or change specs only, ask a second question:
+
+"Do you also want a log check after each publish? I read the app's logs twice, both from the publish time: straight after the publish ('before use') and after the first real use of the changed screens ('after use'). I report errors and which elements wrote entries. It adds two read-only calls per publish."
+
+Options: Yes / No. Record it on the next line as `Log check: yes | no`.
+
 ## When to run
 
 Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: change specs only` and this is a change spec, or the user asks. If the spec says `no`, do not run it.

@@ -19,7 +19,7 @@ The MCP server itself is hosted by OutSystems on your tenant at `https://<your-t
 | `outsystems-tenant-architecture` | Interactive HTML graph of every asset in the tenant, with a traffic and error overlay and an AI governance view. |
 | `outsystems-dependency-impact` | HTML explorer of who depends on a library, agent or connection. Read-only. |
 | `outsystems-custom-code` | Build, test and deploy a C# External Logic library for ODC. The default `project.md` rules don't use it. |
-| `odc-graph-diff` | **Added here, not from OutSystems.** Opt-in graph diff: saves the app model graph before each publish and compares it after, to report anything outside the spec. See [GRAPH-DIFF.md](GRAPH-DIFF.md). |
+| `odc-graph-diff` | **Added here, not from OutSystems.** Opt-in graph diff: saves the app model graph before each publish and compares it after, to report anything outside the spec, with a summary check before each publish and an optional log check. See [GRAPH-DIFF.md](GRAPH-DIFF.md). |
 
 All OutSystems skills except `outsystems` are Beta features. See [OutSystems' README](https://github.com/OutSystems/outsystems-mcp#readme) for what each one needs, such as a shell with Python 3.8+ or the .NET 10 SDK.
 

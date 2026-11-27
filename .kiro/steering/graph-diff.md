@@ -31,7 +31,7 @@ Log check: yes | no
 
 Do not ask again for the same spec unless the user changes it.
 
-## If yes
+## If yes, or change specs only and this is a change spec
 
 - design.md gets a short "Graph diff" section that names the odc-graph-diff skill and the scope of each publish.
 - tasks.md: every publish task runs in this order, with the scope of that publish. Stop for review if anything is out of scope.
@@ -39,10 +39,11 @@ Do not ask again for the same spec unless the user changes it.
   2. "Save the baseline graph"
   3. "Publish"
   4. "Graph diff against the previous revision", including "Summary vs graph diff" in the notes
-- If `Log check: yes`, then add two steps: "Log check, before use" right after the graph diff, and "Log check, after use" after the browser checks.
+- If `Log check: yes`, then add two steps: "Log check, before use" right after the graph diff, and "Log check, after use" after the browser checks, or the first real use of the changed screens.
 - Follow the odc-graph-diff skill. Never read the graph into the chat.
 
 ## If no
 
+- A main spec whose answer is 'change specs only' follows this section.
 - No graph diff tasks.
 - design.md states: "Mentor changes are verified by the acceptance criteria and browser checks only. Changes outside this spec's scope may not be detected."
