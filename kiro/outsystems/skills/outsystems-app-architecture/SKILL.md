@@ -2,8 +2,7 @@
 name: outsystems-app-architecture
 description: "[Beta] Generate an interactive HTML graph of a single OutSystems app's architecture — UI flows + screens, server/client/service actions with signatures, entities with attributes and relationships, static enums, structures, roles, AI model connections, library dependencies and where the app is deployed — with OutSystems-themed dark mode styling. ONE app per invocation — do NOT iterate over multiple apps in a single call (run the skill explicitly per-app; for more than 3 named apps, ask the user and wait for an explicit answer first). For 'every app' / 'all apps' requests and tenant-wide views, use outsystems-tenant-architecture instead: its scope guard asks before any per-app run, without listing the apps first. Use when the user asks for the architecture of a specific app, 'show me the architecture of [app]', 'explore [app]', 'what's inside [app]', 'give me an overview of [app]', or similar. Not for OutSystems 11 (O11) or Service Studio."
 license: MIT
-compatibility: Needs an agent that can run shell commands and Python 3.8+ (standard library only), with the OutSystems MCP server connected and signed in. Validated on Claude Code. Claude Desktop's Chat tab has no shell and cannot run it. The generated HTML loads its graph library from a CDN; offline it shows a plain listing instead.
-allowed-tools: Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/outsystems-app-architecture/scripts/build.py *) Bash(python3 "${CLAUDE_PLUGIN_ROOT}/skills/outsystems-app-architecture/scripts/build.py" *) Write mcp__plugin_outsystems_outsystems__app_list mcp__plugin_outsystems_outsystems__app_info mcp__plugin_outsystems_outsystems__app_refs mcp__plugin_outsystems_outsystems__app_revisions mcp__plugin_outsystems_outsystems__env_list mcp__plugin_outsystems_outsystems__env_apps mcp__plugin_outsystems_outsystems__context_screens mcp__plugin_outsystems_outsystems__context_actions mcp__plugin_outsystems_outsystems__context_entities mcp__plugin_outsystems_outsystems__context_structures mcp__plugin_outsystems_outsystems__context_roles mcp__plugin_outsystems_outsystems__context_connections mcp__outsystems__app_list mcp__outsystems__app_info mcp__outsystems__app_refs mcp__outsystems__app_revisions mcp__outsystems__env_list mcp__outsystems__env_apps mcp__outsystems__context_screens mcp__outsystems__context_actions mcp__outsystems__context_entities mcp__outsystems__context_structures mcp__outsystems__context_roles mcp__outsystems__context_connections
+compatibility: Needs an agent that can run shell commands and Python 3.10+ (standard library only), with the OutSystems MCP server connected and signed in. Validated on Claude Code. Claude Desktop's Chat tab has no shell and cannot run it. The generated HTML loads its graph library from a CDN; offline it shows a plain listing instead.
 metadata:
   version: "1.7.0"
   maturity: beta
@@ -35,7 +34,7 @@ instead of the graph.
   the tools named below; tool names here are the server's own, and your
   harness may show them with a prefix (in Claude Code,
   `mcp__plugin_outsystems_outsystems__app_info` for `app_info`).
-- A shell with `python3` (3.8 or later, standard library only). The
+- A shell with `python3` (3.10 or later, standard library only). The
   script reads the saved tool results from disk and writes the HTML; it
   never calls the server and holds no sign-in of its own.
 - `<skill-folder>` below is this skill's own folder: the one holding this
@@ -343,7 +342,7 @@ that wrote it).
   AI model connections, libraries (the second line `build.py` prints)
 - Deployment line `build.py` prints, with its "as of" time
 - The `library coverage:` and `dependencies not fetched:` lines when
-  `build.py` prints them: never present the library list as complete
+  `build.py` prints them
 - Cache state — "used (Xs old)" or "refreshed"; mention any
   `note:`/`warning:` lines `build.py` printed (for example about records)
 
@@ -368,10 +367,13 @@ APP_DATA = {
   inheritedEnums: [{ k, n, desc, fromModule, attrs, records, recordCount }],
   structures: [{ k, n, desc, attrs: [Attr] }],
   roles: [{ k, n, desc, pub }],
-  deps: [{ k, n, kind, cat: "AIModel"|"Library", rev }],   // connections first, deduped with app_refs
+  deps: [{ k, n, kind, cat: "AIModel"|"Library", rev,
+           origin?: "indexed"|"declared" }],               // connections first, deduped with app_refs
   depsSource: "app_refs"|null,                            // where the libraries came from
   depsUnavailable: ["libraries"?, "AI model connections"?], // parts not fetched: the page says so
-  refsCoverage: { source, indexedKinds: [string] | null } | null,  // what app_refs covers: the page says so
+  refsCoverage: { source, indexedKinds: [string] | null,          // what app_refs covers: the page says so
+                  coverage: { declared, reason?, revision?, latestRevision? } | null } | null,
+                  // coverage.note and coverage.revisionNote are not copied
   deployments: { fetchedAt, latestRevision,
                  envs: [{ k, n, purpose, status: "deployed"|"not-deployed"|"unknown"|"n/a",
                           rev?, at?, behind?, reason? }] } | null,
@@ -398,12 +400,7 @@ Attr = { n, t, pk?, req?, len?, d?,
 - `deployments.envs[].status` is `unknown` when the environment's
   `env_apps` response was not fetched, or was truncated without a row
   for this app key.
-- `refsCoverage`: a `context-service` answer lists only the element kinds
-  in `indexedKinds` (often just `entities`), so a library the app uses
-  only through actions, structures, blocks or themes can be missing, and
-  even a listed kind is not proven complete; the page and your report
-  must say which kinds were covered (unknown when `indexedKinds` is null)
-  and never present the list as complete. It does not apply to a `stored-xre` answer.
+- For what an `app_refs` answer covers (`indexedKinds`, `origin`, `coverage`), read the `app_refs` tool description.
 - Built-in OutSystems modules are filtered out of `deps`. `deps` is
   empty when neither connections nor refs were available; the template
   hides the Dependencies layer then.
@@ -465,7 +462,7 @@ writes are the main cost (see the whitelist's token trade-off).
   then start over. Don't loop.
 - **The OutSystems tools are missing** → the MCP server is not connected;
   ask the user to connect it (see the main OutSystems skill's setup).
-- **`python3: command not found`** → ask the user to install Python 3.8
+- **`python3: command not found`** → ask the user to install Python 3.10
   or later; nothing else is needed.
 - **`build.py` exits 1 with `could not write the output file`** → the
   output path is not writable (no space left, no permission, or a folder

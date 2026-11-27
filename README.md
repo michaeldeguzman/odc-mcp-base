@@ -21,7 +21,7 @@ The MCP server itself is hosted by OutSystems on your tenant at `https://<your-t
 | `outsystems-custom-code` | Build, test and deploy a C# External Logic library for ODC. The default `project.md` rules don't use it. |
 | `odc-graph-diff` | **Added here, not from OutSystems.** Opt-in graph diff: saves the app model graph before each publish and compares it after, to report anything outside the spec, with a summary check before each publish and an optional log check. See [GRAPH-DIFF.md](GRAPH-DIFF.md). |
 
-All OutSystems skills except `outsystems` are Beta features. See [OutSystems' README](https://github.com/OutSystems/outsystems-mcp#readme) for what each one needs, such as a shell with Python 3.8+ or the .NET 10 SDK.
+All OutSystems skills except `outsystems` are Beta features. See [OutSystems' README](https://github.com/OutSystems/outsystems-mcp#readme) for what each one needs, such as a shell with Python 3.10+ or the .NET 10 SDK.
 
 **The SDD Base files:**
 
@@ -91,7 +91,7 @@ Where each part of this repo comes from. The copies are read-only here. Refresh 
 
 | Part | Source | Licence |
 | --- | --- | --- |
-| `kiro/outsystems/` (except `odc-graph-diff`) and `.kiro/agents/status-watcher.json` | [OutSystems/outsystems-mcp](https://github.com/OutSystems/outsystems-mcp), a snapshot, trimmed to Kiro only | MIT, OutSystems |
+| `kiro/outsystems/` (except `odc-graph-diff`) and `.kiro/agents/status-watcher.json` | [OutSystems/outsystems-mcp](https://github.com/OutSystems/outsystems-mcp), a snapshot of version 1.13.0 at commit 919651f, trimmed to Kiro only | MIT, OutSystems |
 | `vendor/outsystems-ui/` (only `docs-ai/` and `LICENSE`) | [OutSystems/outsystems-ui](https://github.com/OutSystems/outsystems-ui), commit eafabd8 | BSD 3-Clause, OutSystems |
 | `vendor/spec-first-tdd/` | [donnieprakoso/spec-first-tdd](https://github.com/donnieprakoso/spec-first-tdd), commit cf77f24 | MIT, Donnie Prakoso |
 | `.kiro/steering/`, `kiro/outsystems/skills/odc-graph-diff/`, `templates/`, `GRAPH-DIFF.md`, `e2e/`, this README | Written by me | MIT |
