@@ -31,7 +31,7 @@ The graph is several MB, so it never goes into the chat. Kiro saves it to a file
 | `.kiro/steering/graph-diff.md` | Always loaded. Asks the question and makes the spec follow the answer |
 | `kiro/outsystems/skills/odc-graph-diff/SKILL.md` | The method: baseline, publish, compare, report |
 | `kiro/outsystems/skills/odc-graph-diff/scripts/graphdiff.py` | The comparison. Python 3.8+, standard library only, read-only |
-| `kiro/outsystems/skills/odc-graph-diff/templates/notes.md` | The notes file for each publish |
+| `kiro/outsystems/skills/odc-graph-diff/templates/notes.md` | The notes file for each publish. It states only what the graph shows: anything else is marked as an inference, and Mentor's claims are attributed to Mentor |
 
 ## Setup
 
