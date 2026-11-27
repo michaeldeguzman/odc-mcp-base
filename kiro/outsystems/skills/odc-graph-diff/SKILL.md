@@ -28,13 +28,18 @@ Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: chan
 
 ## Steps
 
-1. **Baseline, before the publish.** Call `app_revisions` and note the latest revision N. Call `context_graph` for the whole app, no root. Save the full result to `Reports/graphdiff/N.xre`. `context_graph` serves only the latest revision, so this is the last chance to save N.
+1. **Summary check, before the publish.** Before you ask the user to confirm the publish, compare Mentor's summary and its pending changes with the task prompt and with the spec's scope for this task.
+   - Record the result in the notes file under "Summary check (before publish)": "Matches", or each difference. The notes file is written after the publish (step 7), so keep the result until then.
+   - If something is clearly wrong or missing, ask Mentor to correct it before publishing.
+   - Mentor's summary can be incomplete, so this check does not replace the graph diff after the publish. Keep the scope from the spec, never from Mentor's list.
+   - Source: OutSystems' Build your first app guide (Step 5) suggests comparing the agent's summary with the prompt file before each publish: https://success.outsystems.com/documentation/outsystems_developer_cloud/agentic_development/outsystems_mcp/build_your_first_app/
+2. **Baseline, before the publish.** Call `app_revisions` and note the latest revision N. Call `context_graph` for the whole app, no root. Save the full result to `Reports/graphdiff/N.xre`. `context_graph` serves only the latest revision, so this is the last chance to save N.
    - If `Reports/graphdiff/N.xre` already exists and its header says revision N, reuse it.
    - Check the header: `has_more` must be false. If not, read every page before saving.
-2. **Publish**, following the main `outsystems` skill's confirmation rules.
-3. **After the publish.** Call `app_revisions` again and note the new revision M. If M is more than N + 1, someone else published in between (for example from ODC Studio), or Mentor auto-merged another revision. Say so. Only M can be read now, so compare N to M and report the extra revision.
+3. **Publish**, following the main `outsystems` skill's confirmation rules.
+4. **After the publish.** Call `app_revisions` again and note the new revision M. If M is more than N + 1, someone else published in between (for example from ODC Studio), or Mentor auto-merged another revision. Say so. Only M can be read now, so compare N to M and report the extra revision.
 4. Call `context_graph` again, whole app, and save it to `Reports/graphdiff/M.xre`.
-5. **Compare.** Run, from the skill folder:
+6. **Compare.** Run, from the skill folder:
 
    ```
    python3 scripts/graphdiff.py Reports/graphdiff/N.xre Reports/graphdiff/M.xre \
@@ -47,10 +52,11 @@ Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: chan
    Two things to know when you set the scope:
    - The app's default screen is stored on the app element (`IESpace:<App>`), not on the UI flow.
    - A rename reaches every element that refers to the renamed one. Renaming a role, for example, also changes the permission names on every screen that uses it. Expect those changes and explain them, but leave them out of the scope so they are listed.
-6. **Write `Reports/graphdiff/N-to-M-notes.md`** from `templates/notes.md`. Read the content changes in the `.diff` and say, for each, whether the spec asked for it. Check values that matter to the spec, such as record names, labels, filters and roles. The script shows which elements changed, not whether their values are right.
+7. **Write `Reports/graphdiff/N-to-M-notes.md`** from `templates/notes.md`. Read the content changes in the `.diff` and say, for each, whether the spec asked for it. Check values that matter to the spec, such as record names, labels, filters and roles. The script shows which elements changed, not whether their values are right.
+   - Fill "Summary vs graph diff": compare the diff with the summary check result from step 1, and list the differences in both directions.
    - Say only what the graph shows. Every statement in the notes must come from the diff output or from values read in the saved .xre files. Mark anything else as Inference, and attribute Mentor's claims as 'Mentor said'. Example from testing: 'Save validates the form' was written as fact when the graph only showed a ValidateAndContinue setting, and the browser later proved the form was not checked.
-7. **Stop for the user** if anything is out of scope or unexplained. Do not fix it. Report it.
-8. **Log check, only if the spec says `Log check: yes`.** The graph checks the model. The log check looks at what the app did after the publish. It is two reads, "before use" and "after use".
+8. **Stop for the user** if anything is out of scope or unexplained. Do not fix it. Report it.
+9. **Log check, only if the spec says `Log check: yes`.** The graph checks the model. The log check looks at what the app did after the publish. It is two reads, "before use" and "after use".
    - **Before use.** Note the publish time. Straight after the publish, and before the next publish or the browser checks, call the MCP's app log tool (`app_logs` at the time of writing; read the live tool list) for this app and stage, from the publish time to now. Aim for a window of about 30 minutes. If less time has passed, say how long the window was. If nobody has used the changed screens in the window, say so.
    - **After use.** After the first real use of the changed screens, for example after the browser checks, read the logs again, from the publish time to now. Say how long the window was and what use it covers, for example the number of searches and page loads.
    - For each read, count the entries and group them by the element that wrote them, such as an action, a screen or a timer. List every error and warning in full.

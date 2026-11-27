@@ -34,8 +34,12 @@ Do not ask again for the same spec unless the user changes it.
 ## If yes
 
 - design.md gets a short "Graph diff" section that names the odc-graph-diff skill and the scope of each publish.
-- tasks.md: every publish task starts with "Save the baseline graph" and ends with "Graph diff against the previous revision", with the scope of that publish. Stop for review if anything is out of scope.
-- If `Log check: yes`, add two steps: "Log check, before use" right after the graph diff, and "Log check, after use" after the browser checks.
+- tasks.md: every publish task runs in this order, with the scope of that publish. Stop for review if anything is out of scope.
+  1. "Summary check against the prompt and spec"
+  2. "Save the baseline graph"
+  3. "Publish"
+  4. "Graph diff against the previous revision", including "Summary vs graph diff" in the notes
+- If `Log check: yes`, then add two steps: "Log check, before use" right after the graph diff, and "Log check, after use" after the browser checks.
 - Follow the odc-graph-diff skill. Never read the graph into the chat.
 
 ## If no

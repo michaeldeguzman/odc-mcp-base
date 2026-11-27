@@ -14,6 +14,10 @@ Recorded <date> after <publish name>. Read-only on the tenant: app_revisions, co
 
 <None, or the revisions published by someone else or auto-merged, and what they changed.>
 
+## Summary check (before publish)
+
+<Mentor's summary and pending changes, compared with the task prompt and the spec's scope for this task, before the publish was confirmed. "Matches", or each difference, with Mentor's claims attributed to Mentor. If something was clearly wrong or missing, what Mentor was asked to correct and what came back.>
+
 ## Result
 
 <Copy the node and edge lines from the .diff.>
@@ -25,6 +29,10 @@ Recorded <date> after <publish name>. Read-only on the tenant: app_revisions, co
 ## Out of scope
 
 <Each change the task did not ask for, or "None.">
+
+## Summary vs graph diff
+
+<"Matched element for element", or: each element the diff shows that Mentor's summary did not mention, and anything the summary claimed that the diff does not show. State only what the graph shows. Mark anything else as an inference.>
 
 ## Log check
 

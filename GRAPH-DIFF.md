@@ -24,12 +24,16 @@ On ODC, the OutSystems MCP read tools return only the published revision. Before
 
 The graph is several MB, so it never goes into the chat. Kiro saves it to a file and a local script compares it. Each publish adds a few tool calls and a short report. That is why it is opt-in.
 
+## Order of a publish task
+
+Each publish task runs in this order: summary check against the prompt and spec, save the baseline graph, publish, then the graph diff against the previous revision, followed by the log check steps if `Log check: yes`. The summary check compares Mentor's summary and pending changes with the task prompt and the spec's scope before the publish is confirmed (an idea from OutSystems' Build your first app guide), and the notes file's "Summary vs graph diff" section then lists what the diff shows that Mentor's summary did not mention, and what the summary claimed that the diff does not show. Mentor's summary can be incomplete, so the summary check does not replace the graph diff, and the scope still comes from the spec.
+
 ## What is in SDD Base
 
 | File | What it does |
 |---|---|
 | `.kiro/steering/graph-diff.md` | Always loaded. Asks the question and makes the spec follow the answer |
-| `kiro/outsystems/skills/odc-graph-diff/SKILL.md` | The method: baseline, publish, compare, report |
+| `kiro/outsystems/skills/odc-graph-diff/SKILL.md` | The method: summary check, baseline, publish, compare, report |
 | `kiro/outsystems/skills/odc-graph-diff/scripts/graphdiff.py` | The comparison. Python 3.8+, standard library only, read-only |
 | `kiro/outsystems/skills/odc-graph-diff/templates/notes.md` | The notes file for each publish. It states only what the graph shows: anything else is marked as an inference, and Mentor's claims are attributed to Mentor |
 
@@ -47,3 +51,7 @@ The graph is several MB, so it never goes into the chat. Kiro saves it to a file
 - It runs only when Kiro publishes. A publish from ODC Studio shows up at the next Kiro check.
 
 The graph diff is not part of OutSystems' Power. It was added to this snapshot after the Employee Catalog builds, November 2026.
+
+## Next step, not yet tested
+
+A cumulative graph diff before promoting to another stage: compare the revision to be promoted with the last revision released to that stage, so that everything that would reach the stage is checked together, not only the last publish. This has not been tested. In particular, reading the graph of another stage with `context_graph` has not been tested: on 27 Nov 2026 the `context_graph` schema showed the arguments key, root, graphviz and cursor, with no stage, and nothing here shows whether it can read a revision deployed in another stage. A deployment started from the ODC Portal would skip the check, because the check runs only when Kiro starts the deployment.
