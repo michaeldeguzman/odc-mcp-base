@@ -13,6 +13,7 @@
    - Check by hand: <steps and expected values, using made-up sample data only>.
 ## Verification
 Graph diff: <yes | change specs only | no>
+<!-- Include the Log check line only when Graph diff is yes or change specs only. Delete it when Graph diff is no. -->
 Log check: <yes | no>
 ## Notes
 - Sample data is made up. No real people, phone numbers or addresses.
