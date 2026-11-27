@@ -12,7 +12,7 @@ If you answer yes, Kiro asks one more question: whether to add a log check after
 
 ## Log check (optional)
 
-The graph diff checks the model. It can't see what the app does when it runs. The log check reads the app's logs for about 30 minutes after each publish, groups the entries by the element that wrote them, and lists every error and warning. It says which entries come from elements the publish changed. No entries is not proof the app works: a timer that never runs writes nothing. Keep the browser checks.
+The graph diff checks the model. It can't see what the app does when it runs. The log check reads the app's logs after each publish, groups the entries by the element that wrote them, and lists every error and warning. It says which entries come from elements the publish changed. It reads twice: straight after the publish, aiming at about 30 minutes ("before use"), and again from the publish time to after the first real use of the changed screens ("after use"), and it reports both side by side. The first read can have no traffic, so zero entries proves little: on FeedbackNotes revision 5 it found 0 entries in 3.5 minutes, and the second found 1 platform Information entry in 2 h 46 min, with no warnings or errors and nothing from the changed elements. No entries is not proof the app works: a timer that never runs writes nothing. Keep the browser checks.
 
 The idea comes from a fellow ODC developer who pairs his graph diff with a 30-minute log window after each publish.
 

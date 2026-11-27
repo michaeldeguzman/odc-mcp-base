@@ -21,7 +21,7 @@ Graph diff: yes | change specs only | no
 
 If the answer is yes, or change specs only, ask a second question:
 
-"Do you also want a log check after each publish? Before the next publish or the browser checks, I read the app's logs since the publish, about 30 minutes, and report errors and which elements wrote entries. It adds one read-only call per publish."
+"Do you also want a log check after each publish? I read the app's logs twice, both from the publish time: straight after the publish ('before use') and after the first real use of the changed screens ('after use'). I report errors and which elements wrote entries. It adds two read-only calls per publish."
 
 Options: Yes / No.
 
@@ -35,7 +35,7 @@ Do not ask again for the same spec unless the user changes it.
 
 - design.md gets a short "Graph diff" section that names the odc-graph-diff skill and the scope of each publish.
 - tasks.md: every publish task starts with "Save the baseline graph" and ends with "Graph diff against the previous revision", with the scope of that publish. Stop for review if anything is out of scope.
-- If `Log check: yes`, add "Log check since the publish" before the next publish or the browser checks, whichever comes first.
+- If `Log check: yes`, add two steps: "Log check, before use" right after the graph diff, and "Log check, after use" after the browser checks.
 - Follow the odc-graph-diff skill. Never read the graph into the chat.
 
 ## If no

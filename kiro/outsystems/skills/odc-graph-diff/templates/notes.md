@@ -28,7 +28,15 @@ Recorded <date> after <publish name>. Read-only on the tenant: app_revisions, co
 
 ## Log check
 
-<Only if the spec says Log check: yes. Window from <publish time> to <time>, <n> entries, grouped by the element that wrote them. Every error and warning in full. Which entries come from elements this publish changed. Or "No entries", which is not proof the app works.>
+<Only if the spec says Log check: yes. Two reads, side by side. Say only what the logs show, and mark any explanation as an inference.>
+
+### Before use
+
+<Window from <publish time> to <time>, <n> entries, grouped by the element that wrote them. Every error and warning in full. Which entries come from elements this publish changed. Say if nobody had used the changed screens in the window. Or "No entries", which is not proof the app works.>
+
+### After use
+
+<Window from <publish time> to <time>, and what use it covers (for example the browser checks: <n> searches, <n> page loads). Then the same as above: <n> entries, grouped by the element that wrote them, every error and warning in full, which entries come from elements this publish changed. Or "No entries", which is not proof the app works.>
 
 ## Decision
 

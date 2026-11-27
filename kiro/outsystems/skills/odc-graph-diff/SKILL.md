@@ -50,12 +50,14 @@ Only when the spec's requirements.md has `Graph diff: yes`, or `Graph diff: chan
 6. **Write `Reports/graphdiff/N-to-M-notes.md`** from `templates/notes.md`. Read the content changes in the `.diff` and say, for each, whether the spec asked for it. Check values that matter to the spec, such as record names, labels, filters and roles. The script shows which elements changed, not whether their values are right.
    - Say only what the graph shows. Every statement in the notes must come from the diff output or from values read in the saved .xre files. Mark anything else as Inference, and attribute Mentor's claims as 'Mentor said'. Example from testing: 'Save validates the form' was written as fact when the graph only showed a ValidateAndContinue setting, and the browser later proved the form was not checked.
 7. **Stop for the user** if anything is out of scope or unexplained. Do not fix it. Report it.
-8. **Log check, only if the spec says `Log check: yes`.** The graph checks the model. The log check looks at what the app did after the publish.
-   - Note the publish time. Before the next publish, or before the browser checks, call the MCP's app log tool (`app_logs` at the time of writing; read the live tool list) for this app and stage, from the publish time to now. Aim for a window of about 30 minutes. If less time has passed, say how long the window was.
-   - Count the entries and group them by the element that wrote them, such as an action, a screen or a timer. List every error and warning in full.
+8. **Log check, only if the spec says `Log check: yes`.** The graph checks the model. The log check looks at what the app did after the publish. It is two reads, "before use" and "after use".
+   - **Before use.** Note the publish time. Straight after the publish, and before the next publish or the browser checks, call the MCP's app log tool (`app_logs` at the time of writing; read the live tool list) for this app and stage, from the publish time to now. Aim for a window of about 30 minutes. If less time has passed, say how long the window was. If nobody has used the changed screens in the window, say so.
+   - **After use.** After the first real use of the changed screens, for example after the browser checks, read the logs again, from the publish time to now. Say how long the window was and what use it covers, for example the number of searches and page loads.
+   - For each read, count the entries and group them by the element that wrote them, such as an action, a screen or a timer. List every error and warning in full.
    - Say which entries come from elements this publish changed and which come from elements it did not touch. An error from an untouched element after the publish is a finding too.
-   - Add the result to the notes file under "Log check". Stop for the user on any error.
-   - No entries is not proof that the app works. A timer that never runs writes nothing. Say "no entries" plainly and keep the browser checks.
+   - Add both reads, side by side, to the notes file under "Log check", in the sub-headings "Before use" and "After use". Stop for the user on any error in either read.
+   - Why two reads: the first read can have no traffic, so zero entries proves little, and only the second read covers use. Observed once, on FeedbackNotes revision 5: before use, 0 entries in 3.5 minutes; after use, 1 platform Information entry in 2 h 46 min, no warnings or errors, nothing from the changed elements.
+   - No entries is not proof that the app works, in either read. A timer that never runs writes nothing. Say "no entries" plainly and keep the browser checks.
 
 ## Rules
 
