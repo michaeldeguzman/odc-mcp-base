@@ -12,6 +12,10 @@ attributes without "index"); sibling index changes are counted on their own.
 Every difference is assigned to its containing element (screen, action,
 entity, ...). Changes that touch only canvas position (X, Y) or only
 modification stamps are reported separately from content changes.
+Added and removed edges are assigned to the element that holds their source
+node, so an element whose only change is an edge (for example a new default
+screen on the app element) is reported and, outside the scope, flagged as
+"edges only".
 
 Python 3.8+, standard library only. Read-only: it never calls the tenant.
 """
@@ -129,6 +133,26 @@ def compare(before, after, scope):
             detail[c].append(("removed", n["_type"], n.get("DisplayName") or n.get("Name") or ""))
 
     edges_added, edges_removed = eb - ea, ea - eb
+    edge_groups = collections.defaultdict(collections.Counter)
+    edge_detail = collections.defaultdict(list)
+    cache = {}
+
+    def edge_container(side, key):
+        if (side, key) not in cache:
+            nodes_, kmap, inc = (nb, kb, ib) if side == "after" else (na, ka, ia)
+            cache[(side, key)] = container(kmap[key][0], nodes_, inc, own)
+        return cache[(side, key)]
+
+    def note_edges(edges, kind, side, kmap):
+        for (skey, tkey, attrs), count in edges.items():
+            c = edge_container(side, skey)
+            edge_groups[c]["edges " + kind] += count
+            target = kmap[tkey][1] if tkey in kmap else {}
+            etype = json.loads(attrs).get("_type", "")
+            edge_detail[c].append((kind, etype, target.get("_type", ""), target.get("DisplayName") or target.get("Name") or ""))
+
+    note_edges(edges_added, "added", "after", kb)
+    note_edges(edges_removed, "removed", "before", ka)
     index_changed = sum(1 for ek in set(pa) & set(pb) if sorted(map(str, pa[ek])) != sorted(map(str, pb[ek])))
     in_scope = set(s.strip() for s in scope.split(",") if s.strip()) if scope else None
 
@@ -139,7 +163,14 @@ def compare(before, after, scope):
             return False
         return any(v and (name in ("added", "removed", "changed content")) for name, v in counts.items())
 
-    out_of_scope = sorted(c for c, v in groups.items() if is_out(c, v))
+    def edge_out(c):
+        return (in_scope is not None and c not in in_scope and not c.startswith("LIBRARY/")
+                and any(edge_groups[c].values()))
+
+    out_by_nodes = set(c for c, v in groups.items() if is_out(c, v))
+    out_by_edges = set(c for c in edge_groups if edge_out(c))
+    out_of_scope = sorted(out_by_nodes | out_by_edges)
+    edges_only = sorted(out_by_edges - out_by_nodes)
     return {
         "before": {"revision": ha.get("revision"), "nodes": len(na), "edges": len(ga["edgeSrc"])},
         "after": {"revision": hb.get("revision"), "nodes": len(nb), "edges": len(gb["edgeSrc"])},
@@ -158,8 +189,11 @@ def compare(before, after, scope):
         },
         "by_container": {c: dict(v) for c, v in sorted(groups.items())},
         "detail": {c: v[:50] for c, v in sorted(detail.items())},
+        "edge_groups": {c: dict(v) for c, v in sorted(edge_groups.items())},
+        "edge_detail": {c: edge_detail[c][:50] for c in edges_only if c in edge_detail},
         "scope": sorted(in_scope) if in_scope is not None else None,
         "out_of_scope": out_of_scope,
+        "out_of_scope_edges_only": edges_only,
     }
 
 
@@ -178,13 +212,24 @@ def markdown(r):
     ]
     for c, v in r["by_container"].items():
         lines.append(f"- {c}: " + ", ".join(f"{k} {v[k]}" for k in sorted(v)))
+    if r["edge_groups"]:
+        lines += ["", "## Edge changes by element", ""]
+        for c, v in r["edge_groups"].items():
+            lines.append(f"- {c}: " + ", ".join(f"{k} {v[k]}" for k in sorted(v)))
     lines += ["", "## Out of scope", ""]
     if r["scope"] is None:
         lines.append("No scope given. Compare the list above with the spec by hand.")
     elif r["out_of_scope"]:
-        lines += [f"- {c}" for c in r["out_of_scope"]]
+        edges_only = set(r["out_of_scope_edges_only"])
+        lines += [f"- {c}" + (" (edges only)" if c in edges_only else "") for c in r["out_of_scope"]]
     else:
         lines.append("None.")
+    if r["edge_detail"]:
+        lines += ["", "## Edge changes in elements whose only change is an edge (first 50 per element)", ""]
+        for c, items in r["edge_detail"].items():
+            lines.append(f"### {c}")
+            lines += [f"- {kind} edge {etype} -> {ttype} {tname}".rstrip() for kind, etype, ttype, tname in items]
+            lines.append("")
     lines += ["", "Library entries (LIBRARY/...) are usually derived types and are not flagged. Check them if they look unexpected."]
     lines += ["", "## Content changes (first 50 per element)", ""]
     for c, items in r["detail"].items():

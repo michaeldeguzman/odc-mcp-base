@@ -11,9 +11,11 @@ Terms not listed here keep their meaning from the main requirements.
 **User Story:** As a <role>, I want <goal>, so that <reason>.
 #### Acceptance Criteria
 1. AC-<NN+1> (<short label>): Given <state>, When <action>, Then <observable result>.
-   - Check by hand: <steps and expected values>.
+   - Check by hand: <steps and expected values>. Browser: <yes | no>.
 ## Verification
 Graph diff: <yes | no> (the main spec's answer is the default)
 Log check: <yes | no>
+## Notes
+- The browser-checks file covers exactly the ACs marked "Browser: yes".
 ## Last task
 Update `.kiro/specs/<main-spec>/requirements.md` with this change. If the app is built with outsystems-spec-driven-build, regenerate its `spec.md`. Keep this change spec as the record of what changed and why.

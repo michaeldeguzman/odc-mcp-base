@@ -10,14 +10,17 @@ When I start the first spec in a project root that has no `Prompts/` and no `Rep
   .kiro/steering/project-<name>.md   this project's rules: app name, app key, scope
   .kiro/specs/                       Kiro's specs
   Prompts/                           numbered prompts sent to Mentor: 001-create-app.md, 002-...
-  Reports/                           checks, interventions.md, build/ for the spec-driven-build skill's
-                                     working files, and graphdiff/ if the graph diff is on
+  Reports/                           checks and interventions.md
+  Reports/build/                     working files of the spec-driven-build skill
+  Reports/screenshots/               browser-check screenshots, in <date>-<check>/ folders
+  Reports/graphdiff/                 only if the graph diff is on
+  .gitignore                         only if the graph diff is on: ignores Reports/graphdiff/*.xre
   README.md                          what the app is and which tenant stage it uses
 ```
 
 - Show the tree with the real project and app names, then ask: "Create this structure? Yes / No / Change it".
 - On yes, create the folders and fill the files from the templates in `SDD Base/templates/project/` (read them with your file tools). Replace `<App>`, `<Project>` and `<name>`. Leave the app key as `<pending>` until the app exists.
-- Add `Reports/graphdiff/` only after the graph diff answer is yes, or change specs only for a change spec.
+- Add `Reports/graphdiff/` and `.gitignore` only after the graph diff answer is yes, or change specs only for a change spec. Create `.gitignore` from `SDD Base/templates/project/.gitignore`. If the project already has a `.gitignore`, add the line only if it is missing, and tell the user.
 - On no, create nothing and don't ask again in this project.
 - Never overwrite an existing file.
 - Ask this before the graph diff question.

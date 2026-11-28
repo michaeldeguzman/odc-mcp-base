@@ -10,6 +10,7 @@ inclusion: always
 ## Browser checks
 
 - Read a result only after loading has settled. An empty table and a table still loading can look the same.
-- To test a user without a role, use a separate account and sign in with its own login. "Continue with OutSystems Community" reuses the account already signed in to outsystems.com.
+- To test a user without a role, create a separate test account without the role and sign in with its own login. "Continue with OutSystems Community" reuses the account already signed in to outsystems.com.
+- Only if a separate account is not possible may the user's own account without the role be used, through any sign-in. Record it in the browser results as a deviation.
 - Do not write test users' emails or other personal details in reports.
-- Save screenshots in `Reports/screenshots/<date>-<check>/`, numbered in the order taken.
+- Save screenshots in `Reports/screenshots/<date>-<check>/`, numbered in the order taken. If the browser tool cannot save files, the user drops them in the folder and Kiro numbers them from the screenshot log. The text results then stand on their own.
